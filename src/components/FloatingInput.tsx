@@ -13,7 +13,6 @@ interface FloatingInputProps extends React.InputHTMLAttributes<HTMLInputElement>
 export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
   ({ label, error, type = 'text', className, registration, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
     const isPassword = type === 'password';
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
@@ -30,10 +29,9 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
               else if (ref) ref.current = e;
             }}
             onFocus={() => {
-              setIsFocused(true);
+              /* no-op */
             }}
             onBlur={(e) => {
-              setIsFocused(false);
               registration.onBlur(e);
             }}
             onChange={registration.onChange}

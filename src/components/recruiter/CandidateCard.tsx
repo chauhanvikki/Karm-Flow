@@ -51,10 +51,10 @@ export default function CandidateCard({ candidate, application, onClick }: Candi
           <div>
             <div className="flex items-center gap-2">
               <h4 className="text-[14px] font-semibold text-[#FAFAFA] leading-tight">{candidate.name}</h4>
-              {application.atsScore && (
+              {application.atsScore?.matchScore !== undefined && (
                 <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                  application.atsScore.matchScore >= 70 ? 'bg-green-500/10 text-green-400' :
-                  application.atsScore.matchScore >= 40 ? 'bg-yellow-500/10 text-yellow-400' :
+                  (application.atsScore.matchScore ?? 0) >= 70 ? 'bg-green-500/10 text-green-400' :
+                  (application.atsScore.matchScore ?? 0) >= 40 ? 'bg-yellow-500/10 text-yellow-400' :
                   'bg-red-500/10 text-red-400'
                 }`}>
                   {application.atsScore.matchScore}%

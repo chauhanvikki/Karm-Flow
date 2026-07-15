@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import type { ApplicationStage } from '../../lib/mockData';
 
-const STAGES: ApplicationStage[] = ['Applied', 'In Review', 'Interview', 'Offer'];
+const STAGES: ApplicationStage[] = ['Applied', 'Screening', 'Interview', 'Offer'];
 
 interface StageProgressProps {
   currentStage: ApplicationStage;
@@ -31,7 +31,6 @@ export default function StageProgress({ currentStage }: StageProgressProps) {
         {STAGES.map((stage, index) => {
           const isCompleted = !isRejected && index < currentIndex;
           const isCurrent = !isRejected && index === currentIndex;
-          const isFuture = isRejected || index > currentIndex;
 
           return (
             <div key={stage} className="flex flex-col items-center flex-1 -mx-4 group">

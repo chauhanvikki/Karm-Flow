@@ -23,7 +23,34 @@ import CandidateCard from './CandidateCard';
 import CandidateSidePanel from './CandidateSidePanel';
 import { useToast } from '../candidate/ToastProvider';
 
-const STAGES: ApplicationStage[] = ['applied', 'screening', 'interview', 'offer', 'hired', 'rejected'];
+const STAGES: ApplicationStage[] = ['Applied', 'Screening', 'Interview', 'Offer', 'Hired', 'Rejected'];
+
+const normalizeStage = (stage?: string): ApplicationStage => {
+  switch (stage) {
+    case 'applied':
+    case 'Applied':
+      return 'Applied';
+    case 'screening':
+    case 'Screening':
+      return 'Screening';
+    case 'interview':
+    case 'Interview':
+      return 'Interview';
+    case 'offer':
+    case 'Offer':
+      return 'Offer';
+    case 'hired':
+    case 'Hired':
+      return 'Hired';
+    case 'rejected':
+    case 'Rejected':
+      return 'Rejected';
+    default:
+      return 'Applied';
+  }
+};
+
+const toBackendStage = (stage: ApplicationStage): string => stage.toLowerCase();
 
 export default function PipelineBoard() {
   const [searchParams] = useSearchParams();
@@ -40,12 +67,12 @@ export default function PipelineBoard() {
   
   const { addToast } = useToast();
   const socketRef = useRef<Socket | null>(null);
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const token = localStorage.getItem('karmflow_token');
-        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
         const res = await fetch(`${apiBase}/jobs?mine=true`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -78,7 +105,7 @@ export default function PipelineBoard() {
     socket.on('application:stage-changed', (updatedApp: any) => {
       setApplications(prev => prev.map(app => 
         (app.id === updatedApp._id || app.id === updatedApp.id) 
-          ? { ...app, currentStage: updatedApp.stage } 
+          ? { ...app, currentStage: normalizeStage(updatedApp.stage) } 
           : app
       ));
     });
@@ -104,7 +131,7 @@ export default function PipelineBoard() {
               id: a._id || a.id,
               jobId: selectedJobId,
               candidateId: cand ? (cand._id || cand.id) : '',
-              currentStage: a.stage,
+              currentStage: normalizeStage(a.stage),
               appliedAt: a.createdAt || new Date().toISOString(),
               timeline: a.stageHistory?.map((sh: any) => ({ stage: sh.stage, date: sh.movedAt || a.createdAt || new Date().toISOString() })) || []
             });
@@ -190,6 +217,8 @@ export default function PipelineBoard() {
     const isOverColumn = over.data.current?.type === 'Column';
     const isOverTask = over.data.current?.type === 'Application';
 
+    if (!isActiveTask) return;
+
     let targetStage: ApplicationStage | null = null;
 
     if (isOverColumn) targetStage = overId as ApplicationStage;
@@ -209,7 +238,7 @@ export default function PipelineBoard() {
       const res = await fetch(`${apiBase}/applications/${appId}/stage`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ stage: newStage })
+        body: JSON.stringify({ stage: toBackendStage(newStage) })
       });
       if (res.ok) {
         addToast('Stage updated successfully');

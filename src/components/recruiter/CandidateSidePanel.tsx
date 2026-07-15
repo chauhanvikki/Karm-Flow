@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Mail, MessageSquare, Briefcase } from 'lucide-react';
+import { X, ExternalLink, Mail, Briefcase } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import type { Candidate, Application, ApplicationStage } from '../../lib/mockData';
 import { formatDistanceToNow } from 'date-fns';
@@ -74,7 +74,7 @@ export default function CandidateSidePanel({ isOpen, onClose, candidate, applica
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-[12px] font-medium text-[#888888] uppercase tracking-wider">Pipeline Progress</label>
                   <select
-                    value={application.currentStage}
+                    value={application.currentStage.toLowerCase()}
                     onChange={(e) => onStageChange(application.id, e.target.value as ApplicationStage)}
                     className="bg-transparent border-none text-[#FAFAFA] text-[13px] font-medium cursor-pointer focus:ring-0 hover:text-brand-accent transition-colors"
                   >
@@ -135,16 +135,16 @@ export default function CandidateSidePanel({ isOpen, onClose, candidate, applica
                             <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-[#222222]" />
                             <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="6" fill="transparent"
                               strokeDasharray={28 * 2 * Math.PI}
-                              strokeDashoffset={28 * 2 * Math.PI - ((application.atsScore.matchScore || 0) / 100) * (28 * 2 * Math.PI)}
+                              strokeDashoffset={28 * 2 * Math.PI - (((application.atsScore.matchScore ?? 0) || 0) / 100) * (28 * 2 * Math.PI)}
                               className={`${
-                                application.atsScore.matchScore >= 70 ? 'text-green-500' :
-                                application.atsScore.matchScore >= 40 ? 'text-yellow-500' :
+                                (application.atsScore.matchScore ?? 0) >= 70 ? 'text-green-500' :
+                                (application.atsScore.matchScore ?? 0) >= 40 ? 'text-yellow-500' :
                                 'text-red-500'
                               } transition-all duration-1000 ease-out`}
                             />
                           </svg>
                           <div className="absolute inset-0 flex items-center justify-center text-[14px] font-bold text-[#FAFAFA]">
-                            {application.atsScore.matchScore}%
+                            {application.atsScore.matchScore ?? 0}%
                           </div>
                         </div>
                         <div>
@@ -187,7 +187,7 @@ export default function CandidateSidePanel({ isOpen, onClose, candidate, applica
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-semibold text-[#FAFAFA]">Resume</h3>
                     <a 
-                      href={application.resumeUrl ? (application.resumeUrl.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:3000'}${application.resumeUrl}` : application.resumeUrl) : '#'}
+                      href={candidate.email ? `mailto:${candidate.email}` : '#'}
                       target="_blank" 
                       rel="noreferrer"
                       className="text-[13px] text-brand-accent hover:text-brand-accent/80 flex items-center gap-1"
@@ -198,7 +198,7 @@ export default function CandidateSidePanel({ isOpen, onClose, candidate, applica
                   <div className="h-32 rounded-xl border border-[#333333] bg-[#151515] flex flex-col items-center justify-center text-[#888888]">
                     <Briefcase className="w-6 h-6 mb-2 text-[#444444]" />
                     <span className="text-[13px] text-center px-4 truncate w-full">
-                      {application.resumeUrl ? application.resumeUrl.split('/').pop() : 'No resume uploaded'}
+                      {candidate.email ? `${candidate.name}'s profile` : 'No resume uploaded'}
                     </span>
                   </div>
                 </section>

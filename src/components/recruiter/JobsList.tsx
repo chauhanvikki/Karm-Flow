@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Plus, MoreHorizontal, Edit2, Archive, Users, ExternalLink } from 'lucide-react';
+import { Search, Plus, Edit2, Archive, Users, ExternalLink } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import type { Job } from '../../lib/mockData';
@@ -9,7 +9,7 @@ import type { JobFormData } from './JobForm';
 import { useToast } from '../candidate/ToastProvider';
 
 export default function JobsList() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const isFormOpen = searchParams.get('new') === 'true' || searchParams.has('edit');
   const editJobId = searchParams.get('edit');
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -17,12 +17,12 @@ export default function JobsList() {
   const [statusFilter, setStatusFilter] = useState<'All' | 'Open' | 'Draft' | 'Closed'>('All');
   const { addToast } = useToast();
   const navigate = useNavigate();
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const token = localStorage.getItem('karmflow_token');
-        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
         const res = await fetch(`${apiBase}/jobs?mine=true`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -58,7 +58,7 @@ export default function JobsList() {
           body: JSON.stringify(payload)
         });
         if (res.ok) {
-          const updated = await res.json();
+          await res.json();
           setJobs(jobs.map(j => j.id === editJobId ? { ...j, ...data, requirements: data.requirements.split('\n') } : j));
           addToast('Job updated successfully');
         } else {

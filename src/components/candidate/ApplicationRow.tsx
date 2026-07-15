@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ChevronDown, CheckCircle2 } from 'lucide-react';
-import clsx from 'clsx';
 import StageProgress from './StageProgress';
 import type { Application, Job } from '../../lib/mockData';
 

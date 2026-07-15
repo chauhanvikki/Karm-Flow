@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin, Briefcase, Calendar } from 'lucide-react';
 import ApplyModal from './ApplyModal';
-import { MOCK_JOBS, MOCK_APPLICATIONS, delay } from '../../lib/mockData';
 import type { Job } from '../../lib/mockData';
 
 export default function JobDetail() {

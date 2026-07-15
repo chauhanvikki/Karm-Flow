@@ -31,6 +31,13 @@ export interface ApplicationTimelineEvent {
   date: string;
 }
 
+export interface ATSScore {
+  matchScore?: number;
+  summary?: string;
+  matchedKeywords?: string[];
+  missingKeywords?: string[];
+}
+
 export interface Application {
   id: string;
   jobId: string;
@@ -38,6 +45,7 @@ export interface Application {
   appliedAt: string;
   currentStage: ApplicationStage;
   timeline: ApplicationTimelineEvent[];
+  atsScore?: ATSScore;
 }
 
 export interface ActivityEvent {

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ApplicationRow from './ApplicationRow';
-import { MOCK_JOBS, MOCK_APPLICATIONS, delay } from '../../lib/mockData';
 import type { Application, Job } from '../../lib/mockData';
 
 export default function MyApplications() {
