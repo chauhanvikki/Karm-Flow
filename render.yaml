@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: karmflow-api
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: "cd server && npm install"
+    startCommand: "cd server && npm run dev"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000

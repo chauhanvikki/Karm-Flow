@@ -24,8 +24,10 @@ export default function JobListings() {
       try {
         const token = localStorage.getItem('karmflow_token');
         
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
         // Fetch open jobs
-        const jobsRes = await fetch('http://localhost:3000/api/jobs');
+        const jobsRes = await fetch(`${apiBase}/jobs`);
         if (jobsRes.ok) {
           const data = await jobsRes.json();
           // Transform backend _id to id if necessary, or just use _id
@@ -35,7 +37,7 @@ export default function JobListings() {
 
         // Fetch user's applications to see what they applied for
         if (token) {
-          const appsRes = await fetch('http://localhost:3000/api/applications/me', {
+          const appsRes = await fetch(`${apiBase}/applications/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           if (appsRes.ok) {

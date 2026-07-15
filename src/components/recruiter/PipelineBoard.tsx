@@ -45,7 +45,8 @@ export default function PipelineBoard() {
     const fetchJobs = async () => {
       try {
         const token = localStorage.getItem('karmflow_token');
-        const res = await fetch('http://localhost:3000/api/jobs?mine=true', {
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        const res = await fetch(`${apiBase}/jobs?mine=true`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -67,7 +68,7 @@ export default function PipelineBoard() {
     if (!selectedJobId) return;
 
     // Connect socket
-    socketRef.current = io('http://localhost:3000');
+    socketRef.current = io(import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:3000');
     const socket = socketRef.current;
 
     socket.on('connect', () => {
@@ -85,7 +86,7 @@ export default function PipelineBoard() {
     const fetchApplications = async () => {
       try {
         const token = localStorage.getItem('karmflow_token');
-        const res = await fetch(`http://localhost:3000/api/applications/jobs/${selectedJobId}`, {
+        const res = await fetch(`${apiBase}/applications/jobs/${selectedJobId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -205,7 +206,7 @@ export default function PipelineBoard() {
   const updateApplicationStage = async (appId: string, newStage: ApplicationStage) => {
     try {
       const token = localStorage.getItem('karmflow_token');
-      const res = await fetch(`http://localhost:3000/api/applications/${appId}/stage`, {
+      const res = await fetch(`${apiBase}/applications/${appId}/stage`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ stage: newStage })

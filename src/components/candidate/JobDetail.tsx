@@ -18,8 +18,10 @@ export default function JobDetail() {
       try {
         const token = localStorage.getItem('karmflow_token');
         
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
         // Fetch Job details
-        const jobRes = await fetch(`http://localhost:3000/api/jobs/${id}`, {
+        const jobRes = await fetch(`${apiBase}/jobs/${id}`, {
           headers: token ? { 'Authorization': `Bearer ${token}` } : {}
         });
         
@@ -32,7 +34,7 @@ export default function JobDetail() {
 
         // Fetch Applications to check if already applied
         if (token && jobRes.ok) {
-          const appRes = await fetch('http://localhost:3000/api/applications/me', {
+          const appRes = await fetch(`${apiBase}/applications/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           if (appRes.ok) {

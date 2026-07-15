@@ -22,7 +22,8 @@ export default function JobsList() {
     const fetchJobs = async () => {
       try {
         const token = localStorage.getItem('karmflow_token');
-        const res = await fetch('http://localhost:3000/api/jobs?mine=true', {
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        const res = await fetch(`${apiBase}/jobs?mine=true`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -51,7 +52,7 @@ export default function JobsList() {
       };
 
       if (editJobId) {
-        const res = await fetch(`http://localhost:3000/api/jobs/${editJobId}`, {
+        const res = await fetch(`${apiBase}/jobs/${editJobId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify(payload)
@@ -64,7 +65,7 @@ export default function JobsList() {
           addToast('Failed to update job');
         }
       } else {
-        const res = await fetch('http://localhost:3000/api/jobs', {
+        const res = await fetch(`${apiBase}/jobs`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify(payload)
@@ -88,7 +89,7 @@ export default function JobsList() {
     if (confirm('Are you sure you want to close this job? Candidates will no longer be able to apply.')) {
       try {
         const token = localStorage.getItem('karmflow_token');
-        const res = await fetch(`http://localhost:3000/api/jobs/${id}`, {
+        const res = await fetch(`${apiBase}/jobs/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ status: 'closed' })

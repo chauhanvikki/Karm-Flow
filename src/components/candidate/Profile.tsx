@@ -33,7 +33,8 @@ export default function Profile() {
   const onSubmit = async (data: ProfileFormData) => {
     try {
       const token = localStorage.getItem('karmflow_token');
-      const res = await fetch('http://localhost:3000/api/auth/profile', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const res = await fetch(`${apiBase}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

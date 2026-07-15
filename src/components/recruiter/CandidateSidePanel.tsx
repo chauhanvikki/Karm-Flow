@@ -187,7 +187,7 @@ export default function CandidateSidePanel({ isOpen, onClose, candidate, applica
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-semibold text-[#FAFAFA]">Resume</h3>
                     <a 
-                      href={application.resumeUrl ? (application.resumeUrl.startsWith('/uploads') ? `http://localhost:3000${application.resumeUrl}` : application.resumeUrl) : '#'} 
+                      href={application.resumeUrl ? (application.resumeUrl.startsWith('/uploads') ? `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:3000'}${application.resumeUrl}` : application.resumeUrl) : '#'}
                       target="_blank" 
                       rel="noreferrer"
                       className="text-[13px] text-brand-accent hover:text-brand-accent/80 flex items-center gap-1"

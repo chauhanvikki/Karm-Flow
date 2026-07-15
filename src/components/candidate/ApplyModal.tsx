@@ -79,7 +79,8 @@ export default function ApplyModal({ jobId, jobTitle, isOpen, onClose }: ApplyMo
         formData.append('coverNote', data.coverNote);
       }
 
-      const res = await fetch('http://localhost:3000/api/applications', {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const res = await fetch(`${apiBase}/applications`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

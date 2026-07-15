@@ -19,6 +19,12 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.PORT || 3000;
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://karmflow.vercel.app',
+  'https://*.vercel.app'
+];
 
 // Socket.io setup
 let io: Server;
@@ -26,7 +32,13 @@ export const getIo = () => io;
 
 io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.some((entry) => entry === origin || entry === '*')) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin not allowed: ${origin}`));
+      }
+    },
     methods: ['GET', 'POST', 'PATCH']
   }
 });
@@ -50,7 +62,16 @@ io.on('connection', (socket) => {
 });
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:5173' })); // Allow Vite frontend
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.some((entry) => entry === origin || entry === '*')) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin not allowed: ${origin}`));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
