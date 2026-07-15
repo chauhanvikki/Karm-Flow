@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap');
+
+@theme {
+  --color-brand-dark: #0A0A0A;
+  --color-brand-light: #FAFAFA;
+  --color-brand-accent: #0F9B8E;
+  
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Inter Tight", sans-serif;
+
+  --animate-pulse-subtle: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  @keyframes pulse-subtle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+}
+
+body {
+  @apply bg-brand-dark text-brand-light font-sans antialiased selection:bg-brand-accent/30;
+}
