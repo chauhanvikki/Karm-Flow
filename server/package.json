@@ -27,6 +27,7 @@
     "pdf-parse": "^1.1.1",
     "redis": "^6.1.0",
     "socket.io": "^4.8.3",
+    "tsx": "^4.23.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -36,7 +37,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.2.0",
     "ts-node": "^10.9.2",
-    "tsx": "^4.23.0",
     "typescript": "^7.0.2"
   }
 }
